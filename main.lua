@@ -1,12 +1,15 @@
 --Title: WhackAMole
 --Name: Sasha Malko
 --Course: ICS2O/3C
---This program places a mole on the screen. If the user clicks on it in time,
+--This program places a duck on the screen. If the user clicks on it in time,
 --the score increases by 1.
 -----------------------------------------------------------------------------
+
 --create local variables
 local points = 0
 local pointsObject
+local whack = audio.loadSound("Sounds/whack.mp3")
+local whackChannel
 
 --Hide the status bar
 display.setStatusBar(display.HiddenStatusBar)
@@ -23,35 +26,38 @@ bkg.anchorY = 0
 bkg.x = 0
 bkg.y = 0
 
---Creating mole
-local mole = display.newImage("Images/mole.png", 0, 0)
+--Creating duck
+local duck = display.newImage("Images/duck.png", 0, 0)
 
 --Setting position
-mole.x = display.contentCenterX
-mole.y = display.contentCenterY
+duck.x = display.contentCenterX
+duck.y = display.contentCenterY
 
---make the mole smaller
-mole:scale(0.3,0.3)
+--make the duck smaller
+duck:scale(0.2,0.2)
 
---make the mole invisible
-mole.alpha = 0
+--make the duck invisible
+duck.alpha = 0
 
---display the points on the screen
-pointsObject.text = "Points" .. "=" .. points
-pointsObject = display.newText("", 30, 30, Arial, 20)
-pointsObject:setTextColor(1,0,0)
+--display the points
+pointsObject = display.newText("", 110, 50, Arial, 50)
+pointsObject:setTextColor(0,0,1)
+pointsObject.text = "Points" .. " = " .. points
+
 
 ---------------------------------------------------------------------------------
 --FUNCTIONS
 ---------------------------------------------------------------------------------
 
---This function makes the mole appear in a random (x,y) position on the screen 
+--This function makes the duck appear in a random (x,y) position on the screen 
 --before calling the Hide function
 function PopUp()
 
 	--Choosing Random Position on the screen between 0 and the size of the screen
-	mole.x = math.random(0, display.contentWidth)
-	mole.y = math.random(0, display.contentHeight)
+	duck.x = math.random(0, display.contentWidth)
+	duck.y = math.random(0, display.contentHeight)
+	duck.alpha = 1
+	timer.performWithDelay(600, Hide)
 
 end
 
@@ -60,11 +66,11 @@ function PopUpDelay()
 	timer.performWithDelay(3000, PopUp)
 end
 
---This function makes the mole invisible and then calls the PopUpDelay function
+--This function makes the duck invisible and then calls the PopUpDelay function
 function Hide()
 
 	--Changing visibilty
-	mole.isVisible = false
+	duck.isVisible = false
 	PopUpDelay()
 end
 
@@ -73,7 +79,7 @@ function GameStart()
 	PopUpDelay()
 end
 
---This function increments the score only if the mole is clicked. It then displays the
+--This function increments the score only if the duck is clicked. It then displays the
 --new score.
 function Whacked(event)
 
@@ -81,15 +87,16 @@ function Whacked(event)
 	if (event.phase == "began") then
 		points = points + 1
 		pointsObject.text = "Points" .. "=" .. points
+		whackChannel = audio.play(whack)
 	end
 end
-
 ------------------------------------------------------------------------------------
 --EVENT LISTENERS
 ------------------------------------------------------------------------------------
 
---I added the event listener to the mole so that if the mole us touched, the Whacked function
+--I added the event listener to the duck so that if the duck us touched, the Whacked function
 --is called
-mole:addEventListener("touch", Whacked)
+duck:addEventListener("touch", Whacked)
 
----------------------------Start the game------------------------------------------
+-------------------------------Start the Game---------------------------------------
+GameStart()
