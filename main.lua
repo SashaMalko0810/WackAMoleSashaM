@@ -5,11 +5,15 @@
 --the score increases by 1.
 -----------------------------------------------------------------------------
 
---create local variables
+--declare local variables
 local points = 0
 local pointsObject
+
+--sound
 local whack = audio.loadSound("Sounds/whack.mp3")
 local whackChannel
+local straight = audio.loadSound("Sounds/straight.mp3")
+local straightChannel
 
 --Hide the status bar
 display.setStatusBar(display.HiddenStatusBar)
@@ -37,13 +41,15 @@ duck.y = display.contentCenterY
 duck:scale(0.2,0.2)
 
 --make the duck invisible
-duck.alpha = 0
+duck.alpha = 1
 
 --display the points
 pointsObject = display.newText("", 110, 50, Arial, 50)
 pointsObject:setTextColor(0,0,1)
 pointsObject.text = "Points" .. " = " .. points
 
+--play the background music
+straightChannel = audio.play(straight)
 
 ---------------------------------------------------------------------------------
 --FUNCTIONS
@@ -56,7 +62,7 @@ function PopUp()
 	--Choosing Random Position on the screen between 0 and the size of the screen
 	duck.x = math.random(0, display.contentWidth)
 	duck.y = math.random(0, display.contentHeight)
-	duck.alpha = 1
+	duck.isVisible = true
 	timer.performWithDelay(600, Hide)
 
 end
@@ -79,8 +85,8 @@ function GameStart()
 	PopUpDelay()
 end
 
---This function increments the score only if the duck is clicked. It then displays the
---new score.
+--This function increments the score only if the duck is clicked. It then displays 
+--the new score.
 function Whacked(event)
 
 	--If touch phase just started 
@@ -94,8 +100,8 @@ end
 --EVENT LISTENERS
 ------------------------------------------------------------------------------------
 
---I added the event listener to the duck so that if the duck us touched, the Whacked function
---is called
+--I added the event listener to the duck so that if the duck us touched, the Whacked 
+--function is called
 duck:addEventListener("touch", Whacked)
 
 -------------------------------Start the Game---------------------------------------
